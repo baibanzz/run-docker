@@ -1,0 +1,61 @@
+services:
+  etcd:
+    image: faliarin/etcd:latest
+    container_name: etcd-server
+    ports:
+      - "2379:2379"
+      - "2380:2380"
+    environment:
+      - ALLOW_NONE_AUTHENTICATION=yes
+      - ETCD_ADVERTISE_CLIENT_URLS=http://localhost:2379
+      - ETCD_LISTEN_CLIENT_URLS=http://0.0.0.0:2379
+    volumes:
+      - shared-data:/etcd-data
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  mysql:
+    image: mysql:8
+    container_name: mysql-server
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=88888888
+    volumes:
+      - shared-data:/data/mysql
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  redis:
+    image: redis:8.0
+    container_name: redis-server
+    ports:
+      - "6379:6379"
+    command: redis-server --requirepass 88888888
+    volumes:
+      - shared-data:/data/redis
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:latest
+    container_name: postgres-server
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=88888888
+    volumes:
+      - shared-data:/data/postgres
+    networks:
+      - app-network
+    restart: unless-stopped
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  shared-data:
