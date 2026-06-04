@@ -106,8 +106,10 @@ services:
 
       # === 内存优化 ===
       KAFKA_HEAP_OPTS: "-Xmx512M -Xms256M"
+    networks:
+      - app-network
     volumes:
-      - shared-data:/var/lib/kafka/data
+      - kafka-data:/var/lib/kafka/data
     healthcheck:
       test: [ "CMD-SHELL", "kafka-broker-api-versions --bootstrap-server localhost:9092 || exit 1" ]
       interval: 10s
@@ -127,6 +129,8 @@ services:
       KAFKA_CLUSTERS_0_NAME: local-dev
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:29092
       DYNAMIC_CONFIG_ENABLED: "true"
+    networks:
+      - app-network
 
 networks:
   app-network:
@@ -134,3 +138,4 @@ networks:
 
 volumes:
   shared-data:
+  kafka-data:
