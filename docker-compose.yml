@@ -53,6 +53,28 @@ services:
       - app-network
     restart: unless-stopped
 
+  nacos:
+    image: nacos/nacos-server:latest
+    container_name: nacos-server
+    ports:
+      - "8848:8848"
+      - "9848:9848"
+    environment:
+      - MODE=standalone
+      - SPRING_DATASOURCE_PLATFORM=derby
+      - NACOS_AUTH_ENABLE=true
+      - NACOS_AUTH_TOKEN=VGhpc0lzTXlTZWNyZXRLZXlGb3JOYWNvc0F1dGgyMDI1
+      - NACOS_AUTH_IDENTITY_KEY=serverIdentity
+      - NACOS_AUTH_IDENTITY_VALUE=security
+      - JVM_XMS=512m
+      - JVM_XMX=512m
+      - JVM_XMN=256m
+    volumes:
+      - shared-data:/home/nacos/data
+    networks:
+      - app-network
+    restart: unless-stopped
+
 networks:
   app-network:
     driver: bridge
